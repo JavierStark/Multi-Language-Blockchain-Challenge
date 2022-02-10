@@ -20,7 +20,9 @@ Multiple basic local **blockchains** implementation in **different programming l
 
 **Block properties** 
 - Name
+- Number
 - Hash
 - Difficulty
 - Transaction data
 - Pointer to previous block
+- Timestamp
