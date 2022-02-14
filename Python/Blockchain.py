@@ -1,5 +1,6 @@
 import datetime
 import hashlib
+import json
 
 # h = hashlib.sha256()
 # h.update(b"hola")
@@ -47,6 +48,18 @@ class Block:
       "\n----------------------------------"
     )
 
+  def to_json(self):
+    return json.dumps(
+      {
+        "Name":self.name,
+        "Hash":self.hash,
+        "N_hashes":self.n_hashes,
+        "Transactions":self.transactions,
+        "Previous_block":self.previous_block,
+        "Timestamp":str(self.timestamp)
+      }, indent=4
+    )
+
   
 class Blockchain:
     diff = 15
@@ -80,4 +93,6 @@ blockchain = Blockchain()
 for n in range(10):
   blockchain.mine(Block(("Block " + str(n+1)), [1,2,3,4,5,6]))
 
-
+# Using a JSON string
+# with open('json_data.json', 'w') as outfile:
+#     outfile.write(json_string)
