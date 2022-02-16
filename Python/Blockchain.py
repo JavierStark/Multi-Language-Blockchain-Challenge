@@ -2,11 +2,10 @@ import datetime
 import hashlib
 import io
 import json
+from locale import currency
 import os
 
 from platformdirs import user_cache_dir
-
-current_user = {}
 
 
 def clear_console():
@@ -119,6 +118,8 @@ def interface():
 
 
 def login():
+    clear_console()
+    print("Login\n")
     name = input("Enter username: ")
     password = input("Enter password: ")
     user = {"name": name, "password": password}
@@ -129,12 +130,15 @@ def login():
         users = json_file
 
     if user in users:
+        global current_user
         current_user = user
     else:
         interface()
 
 
 def register():
+    clear_console()
+    print("Register\n")
     name = input("Enter username: ")
     password = input("Enter password: ")
     user = {"name": name, "password": password}
@@ -142,6 +146,7 @@ def register():
         register()
     else:
         add_user(user)
+        login()
 
 
 def add_user(user):
@@ -164,6 +169,8 @@ def add_user(user):
 def main():
     blockchain = Blockchain()
     interface()
+    print("Hola")
+    print(current_user)
     # for n in range(10):
     #     blockchain.mine(Block(("Block " + str(n + 1)), [1, 2, 3, 4, 5, 6]))
 
