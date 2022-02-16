@@ -2,10 +2,7 @@ import datetime
 import hashlib
 import io
 import json
-from locale import currency
 import os
-
-from platformdirs import user_cache_dir
 
 
 def clear_console():
@@ -169,8 +166,7 @@ def add_user(user):
 def main():
     blockchain = Blockchain()
     interface()
-    print("Hola")
-    print(current_user)
+
     # for n in range(10):
     #     blockchain.mine(Block(("Block " + str(n + 1)), [1, 2, 3, 4, 5, 6]))
 
