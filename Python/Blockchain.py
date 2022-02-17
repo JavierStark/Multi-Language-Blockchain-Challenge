@@ -1,6 +1,5 @@
 import datetime
 import hashlib
-import io
 import json
 import os
 
@@ -102,7 +101,7 @@ class Blockchain:
 # --------------------------------------------------
 
 
-def interface():
+def enter_account():
     clear_console()
 
     option = input("Register or Login (R/L) ")
@@ -116,7 +115,7 @@ def interface():
 
 def login():
     clear_console()
-    print("Login\n")
+    print("----Login----\n")
     name = input("Enter username: ")
     password = input("Enter password: ")
     user = {"name": name, "password": password}
@@ -130,12 +129,12 @@ def login():
         global current_user
         current_user = user
     else:
-        interface()
+        enter_account()
 
 
 def register():
     clear_console()
-    print("Register\n")
+    print("----Register----\n")
     name = input("Enter username: ")
     password = input("Enter password: ")
     user = {"name": name, "password": password}
@@ -163,10 +162,34 @@ def add_user(user):
 # --------------------------------------------------
 
 
+def interface():
+    clear_console()
+    print("----Menu----\n")
+
+    print("1. Show blockchain")
+    print("2. Make transaction")
+    print("3. Mine blocks")
+
+    option = input("\nEnter option number: ")
+
+
+def show_blockchain():
+    with open("blockchain.json") as blockchain_file:
+        blochain = json.loads(blockchain_file)
+
+
+def make_transaction():
+    pass
+
+
+def mine_blocks():
+    pass
+
+
 def main():
     blockchain = Blockchain()
+    enter_account()
     interface()
-
     # for n in range(10):
     #     blockchain.mine(Block(("Block " + str(n + 1)), [1, 2, 3, 4, 5, 6]))
 
