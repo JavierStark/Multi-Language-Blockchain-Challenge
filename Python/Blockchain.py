@@ -77,15 +77,32 @@ class Blockchain:
     maxNonce = 2**32
     target = 2 ** (256 - diff)
 
-    block = Block("Genesis")
-    dummy = head = block
+    blockchain_list = None
+    last = None
+
+    def __init__(self):
+        with open("blockchain.json") as blockchain_file:
+          self.blockchain_list = json.load(blockchain_file)
+        if len(self.blockchain_list) == 0:
+          initial_block = Block("Genesis", [])
+          self.last = initial_block
+          self.add(initial_block)
+        else:
+          self.last = self.blockchain_list[-1]
 
     def add(self, block):
-        block.previous_block = self.block.get_hash()
-        block.blockNo = self.block.number + 1
+        block.previous_block = self.last.get_hash()
+        block.blockNo = self.last.number + 1
 
-        self.block.next_block = block
-        self.block = self.block.next_block
+        self.last.next_block = block
+        self.last = self.last.next_block
+
+        self.blockchain_list.append(self.last)
+
+        with open("blockchain.json", w) as blockchain_file:
+          json.dump(self.blockchain, blockchain_file, 
+                        indent=4,  
+                        separators=(',',': '))
 
     def mine(self, block):
         for n in range(self.maxNonce):
@@ -171,22 +188,42 @@ def interface():
     print("3. Mine blocks")
 
     option = input("\nEnter option number: ")
+    option = int(option)
+    if option == 1:
+        show_blockchain()
+
+    if option == 2:
+       make_transaction()
+
+    if option == 3:
+        mine_blocks()
+
 
 
 def show_blockchain():
     with open("blockchain.json") as blockchain_file:
         blochain = json.loads(blockchain_file)
 
+def mine_blocks():
+    clear_console()
+    print("----Mining----")
+    n_blocks = input("Number of blocks to mine: ")
+    for n in range(int(n_blocks)):
+        block = Block("Block", get_transactions_from_pending)
+        blockchain.mine(block)
+
+def get_transactions_from_pending():
+    return []
 
 def make_transaction():
+    print("transaction")    
     pass
 
 
-def mine_blocks():
-    pass
 
 
 def main():
+    global blockchain
     blockchain = Blockchain()
     enter_account()
     interface()
