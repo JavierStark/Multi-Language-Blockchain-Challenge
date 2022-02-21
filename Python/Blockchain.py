@@ -59,17 +59,14 @@ class Block:
         )
 
     def to_json(self):
-        return json.dumps(
-            {
-                "Name": self.name,
-                "Hash": self.hash,
-                "N_hashes": self.n_hashes,
-                "Transactions": self.transactions,
-                "Previous_block": self.previous_block,
-                "Timestamp": str(self.timestamp),
-            },
-            indent=4,
-        )
+        return {
+                "name": str(self.name),
+                "hash": str(self.get_hash()),
+                "n_hashes": str(self.n_hashes),
+                "transactions": str(self.transactions),
+                "previous_block": str(self.previous_block),
+                "timestamp": str(self.timestamp),
+              }
 
 
 class Blockchain:
@@ -91,18 +88,16 @@ class Blockchain:
           self.last = self.blockchain_list[-1]
 
     def add(self, block):
-        block.previous_block = self.last.get_hash()
+        block.previous_block = self.last.hash()
         block.blockNo = self.last.number + 1
 
         self.last.next_block = block
         self.last = self.last.next_block
 
-        self.blockchain_list.append(self.last)
+        self.blockchain_list.append(self.last.to_json())
 
-        with open("blockchain.json", w) as blockchain_file:
-          json.dump(self.blockchain, blockchain_file, 
-                        indent=4,  
-                        separators=(',',': '))
+        with open("blockchain.json", 'w') as blockchain_file:
+          json.dump(self.blockchain_list, blockchain_file)
 
     def mine(self, block):
         for n in range(self.maxNonce):
