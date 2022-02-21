@@ -2,6 +2,7 @@ import datetime
 import hashlib
 import json
 import os
+from collections import namedtuple
 
 
 def clear_console():
@@ -10,6 +11,8 @@ def clear_console():
 
 # --------------------------------------------------
 
+def block_decoder(block_dict):
+    return namedtuple('X', block_dict.keys())(*block_dict.values())
 
 class Block:
 
@@ -85,7 +88,7 @@ class Blockchain:
           self.last = initial_block
           self.add(initial_block)
         else:
-          self.last = self.blockchain_list[-1]
+          self.last = json.loads(self.blockchain_list[-1], object_hook=block_decoder)
 
     def add(self, block):
         block.previous_block = self.last.hash()
