@@ -1,10 +1,12 @@
 [
     {
         "name": "Javier",
-        "password": "123"
+        "password": "123",
+        "balance": 0
     },
     {
         "name": "j",
-        "password": "jf"
+        "password": "jf",
+        "balance": 0
     }
 ]

@@ -12,7 +12,7 @@ def clear_console():
 # --------------------------------------------------
 
 def block_decoder(block_dict):
-    return namedtuple('X', block_dict.keys())(*block_dict.values())
+    return namedtuple('block', block_dict.keys())(*block_dict.values())
 
 class Block:
 
@@ -22,7 +22,6 @@ class Block:
     hash = None
     transactions = None
     previous_block = None
-    next_block = None
     timestamp = datetime.datetime.now()
 
     def __init__(self, name, transactions=[]):
@@ -66,6 +65,7 @@ class Block:
                 "name": str(self.name),
                 "hash": str(self.get_hash()),
                 "n_hashes": str(self.n_hashes),
+                "number": str(self.number),
                 "transactions": str(self.transactions),
                 "previous_block": str(self.previous_block),
                 "timestamp": str(self.timestamp),
@@ -88,16 +88,13 @@ class Blockchain:
           self.last = initial_block
           self.add(initial_block)
         else:
-          self.last = json.loads(self.blockchain_list[-1], object_hook=block_decoder)
+          self.last = block_decoder(self.blockchain_list[-1])
 
     def add(self, block):
-        block.previous_block = self.last.hash()
-        block.blockNo = self.last.number + 1
+        block.previous_block = self.last.hash
+        block.blockNo = int(self.last.number) + 1
 
-        self.last.next_block = block
-        self.last = self.last.next_block
-
-        self.blockchain_list.append(self.last.to_json())
+        self.blockchain_list.append(block.to_json())
 
         with open("blockchain.json", 'w') as blockchain_file:
           json.dump(self.blockchain_list, blockchain_file)
@@ -107,11 +104,18 @@ class Blockchain:
             print(block.n_hashes, end="\r")
             if int(block.get_hash(), 16) <= self.target:
                 self.add(block)
+                current_user.balance += 15
                 print(str(block))
                 break
             else:
                 block.n_hashes += 1
-
+        with open("user.json", "+") as user_file:
+            user_dic = json.load(user_file)
+            for i in user_dic:
+                if i["name"] == current_user.name:
+                  i["balance"] = current_user.balance
+            user_file.write(json.dumps(user_str))
+            
 
 # --------------------------------------------------
 
@@ -139,7 +143,7 @@ def login():
     with open("users.json") as file:
         json_file = json.load(file)
         users = json_file
-
+#BALANCE IS NOT TAKED INTO ACCOUNT HERE
     if user in users:
         global current_user
         current_user = user
@@ -152,7 +156,7 @@ def register():
     print("----Register----\n")
     name = input("Enter username: ")
     password = input("Enter password: ")
-    user = {"name": name, "password": password}
+    user = {"name": name, "password": password, "balance":0}
     if input("Enter password again: ") != password:
         register()
     else:
@@ -200,7 +204,9 @@ def interface():
 
 def show_blockchain():
     with open("blockchain.json") as blockchain_file:
-        blochain = json.loads(blockchain_file)
+        blockchain = json.load(blockchain_file)
+        blockchain = json.dumps(blockchain, indent=2)
+        print(blockchain)
 
 def mine_blocks():
     clear_console()
