@@ -1,15 +1,4 @@
-## Polyglot Blockchain Challenge
-
-Multiple basic local **blockchains** implementation in **different programming languages** to practise.
-
-***
-
-**Lenguages:**
- 1. [ ] Python
- 2. [ ] C++
- 3. [ ] JavaScript (Node.js)
-
-***
+## Python Blockchain 
 
 **Wanted features**
  1. Mining
